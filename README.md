@@ -1,5 +1,5 @@
-# Playwright Demo with TypeScript
-### My Playwright implementation for web automation
+# Cypress Demo with JavaScript
+### My Cypress implementation for web automation
 
 ## Installation
 
