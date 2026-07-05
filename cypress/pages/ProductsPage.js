@@ -12,7 +12,10 @@ class ProductsPage {
   };
 
   visit() {
-    cy.visit('/inventory.html');
+    // SauceDemo's static host answers deep links with a 404 status while
+    // still serving the app shell, so skip the status check — the element
+    // assertion below is the real "page loaded" signal.
+    cy.visit('/inventory.html', { failOnStatusCode: false });
     this.elements.inventoryList().should('be.visible');
   }
 

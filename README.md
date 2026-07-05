@@ -106,6 +106,9 @@ One UI login per user per run is enough to prove the form works (and the login s
 **Why no arbitrary waits?**
 There is not a single `cy.wait(ms)` in the suite. Every step either asserts visibility/URL state before acting or relies on Cypress's built-in retry-until-actionable behaviour — the single biggest lever against flaky E2E suites.
 
+**Why `failOnStatusCode: false` on deep links?**
+SauceDemo's static host answers direct requests to routes like `/inventory.html` with a 404 status code while still serving the app shell. The page objects' `visit()` methods skip the status check and assert on a rendered element instead — which is the check that actually proves the page loaded.
+
 **Why test a user that is broken on purpose?**
 SauceDemo ships `problem_user` with deliberate defects. The suite includes a characterisation test that detects one of them (every product renders the same 404 image) — automation that only ever walks the happy path proves very little about its ability to catch a regression.
 
