@@ -11,7 +11,9 @@ import users from '../fixtures/users.json';
  */
 Cypress.Commands.add('login', (username, password) => {
   cy.session(
-    ['login', username],
+    // Both credentials form the cache key so a call with a different
+    // password can never restore another user's cached session.
+    [username, password],
     () => {
       LoginPage.visit();
       LoginPage.login(username, password);
