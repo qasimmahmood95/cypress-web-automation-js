@@ -11,7 +11,9 @@ class CartPage {
   };
 
   visit() {
-    cy.visit('/cart.html');
+    // See ProductsPage.visit(): deep links return a 404 status but still
+    // serve the app shell.
+    cy.visit('/cart.html', { failOnStatusCode: false });
     this.elements.cartList().should('be.visible');
   }
 
