@@ -1,16 +1,42 @@
 {
-  "name": "cypress-demo",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "cypress run"
+  "name": "cypress-web-automation-js",
+  "version": "2.0.0",
+  "description": "Production-grade Cypress end-to-end test framework for the Sauce Labs demo store — Page Object Model, session-cached authentication, GitHub Actions CI, and HTML reporting.",
+  "author": "Qasim Mahmood",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qasimmahmood95/cypress-web-automation-js.git"
   },
-  "author": "",
+  "keywords": [
+    "cypress",
+    "e2e",
+    "test-automation",
+    "page-object-model",
+    "javascript",
+    "github-actions"
+  ],
+  "scripts": {
+    "cy:open": "cypress open",
+    "test": "cypress run",
+    "test:chrome": "cypress run --browser chrome",
+    "test:firefox": "cypress run --browser firefox",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "devDependencies": {
-    "@eslint/js": "^9.9.1",
-    "cypress": "^13.13.1",
-    "eslint": "^9.9.1",
-    "globals": "^15.9.0"
+    "@eslint/js": "^10.0.1",
+    "cypress": "^15.18.0",
+    "cypress-mochawesome-reporter": "^4.0.2",
+    "eslint": "^10.6.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-cypress": "^6.4.2",
+    "globals": "^17.7.0",
+    "prettier": "^3.9.4"
   }
 }

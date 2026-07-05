@@ -1,4 +1,14 @@
+# Dependencies
 node_modules/
-package-lock.json
-cypress/screenshots
-cypress/videos
+
+# Cypress artifacts
+cypress/reports/
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+
+# Logs
+npm-debug.log*
+
+# OS cruft
+.DS_Store
