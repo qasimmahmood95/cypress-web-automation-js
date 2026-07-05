@@ -54,6 +54,11 @@ describe('Products', () => {
   });
 
   it('sorts products by name (A to Z)', () => {
+    // 'az' is the default order, so switch away first — otherwise this
+    // test could never fail, even with the sort handler broken.
+    ProductsPage.sortBy('za');
+    ProductsPage.assertNamesSorted('desc');
+
     ProductsPage.sortBy('az');
     ProductsPage.assertNamesSorted('asc');
   });

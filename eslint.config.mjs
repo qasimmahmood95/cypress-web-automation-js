@@ -14,11 +14,18 @@ export default [
     ],
   },
   js.configs.recommended,
-  cypress.configs.recommended,
   {
+    // The plugin's recommended config ships unscoped (and defines cy,
+    // describe, window, ... globally), so constrain it to test code —
+    // Node-side files keep real no-undef coverage.
     files: ['cypress/**/*.js'],
+    ...cypress.configs.recommended,
     languageOptions: {
-      globals: { ...globals.browser },
+      ...cypress.configs.recommended.languageOptions,
+      globals: {
+        ...cypress.configs.recommended.languageOptions?.globals,
+        ...globals.browser,
+      },
     },
   },
   {
