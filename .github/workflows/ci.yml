@@ -57,7 +57,7 @@ jobs:
           node-version: 22
 
       - name: Run Cypress
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7
         with:
           browser: ${{ matrix.browser }}
 
