@@ -31,7 +31,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "axe-core": "^4.12.1",
     "cypress": "^15.18.0",
+    "cypress-axe": "^1.7.0",
     "cypress-mochawesome-reporter": "^4.0.2",
     "eslint": "^10.6.0",
     "eslint-config-prettier": "^10.1.8",
