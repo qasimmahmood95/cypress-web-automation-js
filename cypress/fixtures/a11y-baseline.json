@@ -1,0 +1,5 @@
+{
+  "_comment": "Known axe-core violations on saucedemo.com, documented so the accessibility spec gates on regressions rather than failing forever on a third-party site's existing defects. Rule ids per page; remove an id once the site fixes it.",
+  "login": ["landmark-one-main", "page-has-heading-one", "region"],
+  "inventory": ["landmark-one-main", "page-has-heading-one", "region", "select-name"]
+}
