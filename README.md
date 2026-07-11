@@ -5,6 +5,8 @@
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES2022-F7DF1E?logo=javascript&logoColor=black)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
+**[📊 Latest test report](https://qasimmahmood95.github.io/cypress-web-automation-js/)** — the mochawesome HTML report from the most recent run on `main`, published via GitHub Pages.
+
 A production-grade end-to-end test framework for the [Sauce Labs demo store](https://www.saucedemo.com), built with Cypress and plain JavaScript. It demonstrates the patterns I use in real projects: a lean Page Object Model, session-cached authentication, retry-safe assertions, HTML reporting, and a CI pipeline that runs the full suite on every push.
 
 ## Highlights
@@ -13,16 +15,18 @@ A production-grade end-to-end test framework for the [Sauce Labs demo store](htt
 - **Session-cached login.** Tests authenticate through a `cy.login()` custom command built on [`cy.session()`](https://docs.cypress.io/api/commands/session) with `cacheAcrossSpecs`, so the UI login runs once and every other test restores the cookie snapshot — faster runs, isolated state, and a clean cart guaranteed at the start of each test. The login specs still exercise the real form.
 - **Stable, semantic selectors.** Every locator targets the app's `data-test` attributes, with product names converted to selector slugs in one utility — no brittle CSS chains or XPath.
 - **Meaningful assertions.** The checkout suite verifies the order total math against prices scraped from the inventory page; the sorting suite asserts real order inside `.should()` callbacks so the checks ride Cypress's retry loop instead of racing the re-render.
-- **CI you can read.** GitHub Actions lints, format-checks, then runs the whole suite in Chrome; an HTML report (with embedded failure screenshots) is uploaded as an artifact on every run.
+- **CI you can read.** GitHub Actions lints, format-checks, then runs the whole suite in Chrome and Firefox; the HTML report is published to GitHub Pages on every `main` run and uploaded as an artifact everywhere else.
+- **Accessibility as a regression gate.** Every key page is scanned with axe (`cypress-axe`); the site's pre-existing violations are documented in a baseline fixture, so the suite fails only when a _new_ violation appears.
 
 ## Test coverage
 
-| Spec             | Scenarios                                                                                                                                                                                   |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `login.cy.js`    | Successful login, locked-out user, invalid credentials, required username/password validation, logout                                                                                       |
-| `products.cy.js` | Add/remove from inventory list and details page, cart badge counts, sorting by name and price in both directions, a characterisation test pinning down `problem_user`'s broken-image defect |
-| `cart.cy.js`     | Cart contents after adding, removing items from the cart, reset app state clears the cart, cart persistence when continuing shopping                                                        |
-| `checkout.cy.js` | Full purchase flow with subtotal/tax/total verification, required-field validation for each field, cancel flow, return to inventory                                                         |
+| Spec                  | Scenarios                                                                                                                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `login.cy.js`         | Successful login, locked-out user, invalid credentials, required username/password validation, logout                                                                                       |
+| `products.cy.js`      | Add/remove from inventory list and details page, cart badge counts, sorting by name and price in both directions, a characterisation test pinning down `problem_user`'s broken-image defect |
+| `cart.cy.js`          | Cart contents after adding, removing items from the cart, reset app state clears the cart, cart persistence when continuing shopping                                                        |
+| `checkout.cy.js`      | Full purchase flow with subtotal/tax/total verification, required-field validation for each field, cancel flow, return to inventory                                                         |
+| `accessibility.cy.js` | axe scans of the login and inventory pages, gated against a documented baseline of the site's known violations                                                                              |
 
 ## Getting started
 
@@ -73,8 +77,9 @@ After a headless run, an HTML report is generated at `cypress/reports/index.html
 │   │   ├── login.cy.js
 │   │   ├── products.cy.js
 │   │   ├── cart.cy.js
-│   │   └── checkout.cy.js
-│   ├── fixtures                 # Test data (users, checkout customer info)
+│   │   ├── checkout.cy.js
+│   │   └── accessibility.cy.js
+│   ├── fixtures                 # Test data (users, checkout info, a11y baseline)
 │   ├── pages                    # Page objects (singletons)
 │   │   ├── components/Header.js # Shared header/sidebar component object
 │   │   ├── LoginPage.js
@@ -112,12 +117,18 @@ SauceDemo's static host answers direct requests to routes like `/inventory.html`
 **Why test a user that is broken on purpose?**
 SauceDemo ships `problem_user` with deliberate defects. The suite includes a characterisation test that detects one of them (every product renders the same 404 image) — automation that only ever walks the happy path proves very little about its ability to catch a regression.
 
+**Why an accessibility _baseline_ instead of a hard gate?**
+SauceDemo is a third-party site with existing axe violations that no test suite of mine can fix. Failing on them forever teaches the team to ignore the a11y job; hiding them with disabled rules loses the signal. Documenting them in `cypress/fixtures/a11y-baseline.json` and failing only on _new_ violations is how you stop the bleeding on a real codebase.
+
 ## CI pipeline
 
-Every push and pull request runs two jobs (plus a weekly scheduled run, since the suite targets a live third-party site that can change while the repo is quiet):
+Every push and pull request runs the pipeline (plus a weekly scheduled run, since the suite targets a live third-party site that can change while the repo is quiet):
 
 1. **Lint & format check** — ESLint (with `eslint-plugin-cypress`) and Prettier in check mode. The Cypress binary download is skipped here for speed.
-2. **Cypress E2E (Chrome)** — the full suite via the official `cypress-io/github-action`, gated on lint passing. The mochawesome HTML report is uploaded as an artifact on every run, and failure screenshots are attached when something breaks.
+2. **Cypress E2E (Chrome + Firefox)** — the full suite in both browsers via the official `cypress-io/github-action`, gated on lint passing. Mochawesome HTML reports are uploaded as artifacts, and failure screenshots are attached when something breaks.
+3. **Publish report** — on `main`, the Chrome report is deployed to [GitHub Pages](https://qasimmahmood95.github.io/cypress-web-automation-js/), including for failed runs — a browsable failure report is exactly when you want one.
+
+Dependabot keeps npm dependencies and workflow actions current with weekly, grouped update PRs.
 
 ## License
 
